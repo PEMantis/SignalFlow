@@ -1,27 +1,38 @@
-# SignalFlow
+![CI](../../actions/workflows/ci.yml/badge.svg)
 
-SignalFlow is a multi-tenant AI governance platform that combines:
+# SignalFlow (MVP)
 
-- LLM evaluation
-- Deterministic policy enforcement
-- Schema validation
-- Full audit logging
-- Replay evaluation
-- Human override tracking
+SignalFlow is a multi-tenant AI governance platform that combines **structured LLM evaluation** with **deterministic policy enforcement**, **auditability**, and **replay**.
+
+This MVP demonstrates:
+- Versioned prompt templates
+- Schema-validated AI outputs (structured JSON)
+- Deterministic policy checks and final decision resolution
+- Full audit records including model, latency, token counts, and prompt version
+- Human override support
+- Replay evaluation (re-run policies without re-calling the model)
 
 ## Architecture
 
-- .NET 9 Web API
-- EF Core + SQLite
-- Clean Architecture (Domain / Application / Infrastructure)
-- Tenant-scoped configuration
-- Structured AI JSON enforcement
+- **API:** .NET 9 Web API
+- **Data:** EF Core + SQLite (initially)
+- **UI:** Angular (light admin UI; optional for MVP demo)
+- **Tenancy:** Tenant-scoped config (per-tenant model selection, thresholds, toggles)
 
-## Key Features
+### Request Flow
 
-- Versioned prompt templates
-- Schema-validated AI outputs
-- Deterministic decision resolution
-- Immutable audit records with hash
-- Replay without model re-execution
-- Human override with traceability
+1. Client submits an input payload (JSON)
+2. Prompt is rendered from a **versioned template**
+3. Model produces **structured JSON output**
+4. Output is **schema validated**
+5. Policies run deterministically, producing policy checks + final decision
+6. Audit record stored (includes model + latency + token counts + prompt version + hash)
+7. Optional: replay evaluation and/or human override
+
+## Quickstart
+
+### Run the API
+```bash
+cd api
+dotnet restore
+dotnet run --project ./SignalFlow.Api/SignalFlow.Api.csproj
